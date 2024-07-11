@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../common/widgets/stars.dart';
 import '../../../models/product.dart';
@@ -34,6 +35,17 @@ class SearchedProduct extends StatelessWidget {
                 fit: BoxFit.contain,
                 height: 135,
                 width: 135,
+                errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    highlightColor: Colors.white,
+                    baseColor: Colors.grey[300]!,
+                    child: Container(
+                      height: 135,
+                      width: 135,
+                      color: Colors.grey[300],
+                    ),
+                  );
+                },
               ),
               Column(
                 children: [

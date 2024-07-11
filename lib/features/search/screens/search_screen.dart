@@ -21,30 +21,57 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Product>? products;
+  List<Product>? productList = [];
   final SearchServices searchServices = SearchServices();
+  ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  int _page = 0;
+  final int _pageSize = 20;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchSearchedProduct();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        fetchSearchedProduct();
+      }
+    });
   }
 
   fetchSearchedProduct() async {
-    products = await searchServices.fetchSearchedProducts(
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+    });
+
+    var products = await searchServices.fetchSearchedProducts(
       context: context,
       searchQuery: widget.searchQuery,
+      page: _page,
+      pageSize: _pageSize,
     );
-    setState(() {});
+    setState(() {
+      productList?.addAll(products);
+      _isLoading = false;
+      _page++;
+    });
   }
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return products == null
+    return productList == null
         ? const Loader()
         : Scaffold(
             appBar: PreferredSize(
@@ -122,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            body: products == null
+            body: productList == null
                 ? const Loader()
                 : Column(
                     children: [
@@ -130,18 +157,24 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(height: 10),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: products!.length,
+                          controller: _scrollController,
+                          itemCount: productList!.length + (_isLoading ? 1 : 0),
                           itemBuilder: (context, index) {
+                            if (index == productList!.length) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
                                   ProductDetailsScreen.routeName,
-                                  arguments: products![index],
+                                  arguments: productList![index],
                                 );
                               },
                               child: SearchedProduct(
-                                product: products![index],
+                                product: productList![index],
                               ),
                             );
                           },
