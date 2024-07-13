@@ -23,7 +23,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   List<Product>? productList = [];
   final SearchServices searchServices = SearchServices();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   int _page = 0;
   final int _pageSize = 20;

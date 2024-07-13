@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../models/product.dart';
 import '../../../providers/user_provider.dart';
-import '../../product_details/screens/product_details_services.dart';
+import '../../product_details/services/product_details_services.dart';
 import '../services/cart_sevices.dart';
 
 class CartProduct extends StatefulWidget {

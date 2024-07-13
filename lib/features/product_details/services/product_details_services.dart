@@ -72,4 +72,40 @@ class ProductDetailsServices {
       );
     } catch (e) {}
   }
+  Future<List<Product>> fetchRecommendedProducts({
+    required BuildContext context,
+    required Product product,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Product> productList = [];
+    try {
+      String pid = product.id ?? '';
+      http.Response res = await http.get(
+        Uri.parse('$uri/api/get-recommendations?pid=$pid'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token
+        },
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            productList.add(
+              Product.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString() + "here it is");
+    }
+
+    return productList;
+  }
 }

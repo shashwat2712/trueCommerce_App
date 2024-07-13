@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// String uri = 'http://localhost:8000';
-String uri = 'https://server-lovat-seven.vercel.app';
+String uri = 'http://localhost:8000';
+// String uri = 'https://server-lovat-seven.vercel.app';
 class GlobalVariables{
   //this class will contain all the static variables
   static const appBarGradient = LinearGradient(
