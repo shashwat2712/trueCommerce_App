@@ -1,12 +1,12 @@
 import 'package:amazon_clone_node_js_flutter_app_new/common/widgets/custom_button.dart';
 import 'package:amazon_clone_node_js_flutter_app_new/common/widgets/stars.dart';
 import 'package:amazon_clone_node_js_flutter_app_new/features/product_details/services/product_details_services.dart';
+import 'package:amazon_clone_node_js_flutter_app_new/features/product_details/widgets/recommendation_box.dart';
 import 'package:amazon_clone_node_js_flutter_app_new/models/product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/global_variable.dart';
 import '../../../providers/user_provider.dart';
@@ -61,7 +61,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     fetchRecommendations();
   }
 
-  void fetchRecommendations() async{
+  void fetchRecommendations() async {
     var products = await productDetailsServices.fetchRecommendedProducts(
       context: context,
       product: widget.product,
@@ -258,106 +258,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               },
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'You might also like',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Recommended',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.green,
+                ),
+              ),
             ),
             SizedBox(
               width: double.infinity,
-              height: 500,
+              height: 400,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: recommendations.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    // height: 200,
-                    padding: const EdgeInsets.all(8.0),
-                    width: 150,
-                    decoration: const BoxDecoration(color: Colors.white),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.grey,
-                          ),
-                          child: Image.network(
-                            recommendations[index].images[0],
-                            fit: BoxFit.contain,
-
-                            errorBuilder: (context, error, stackTrace) {
-                              return Shimmer.fromColors(
-                                highlightColor: Colors.white,
-                                baseColor: Colors.grey[300]!,
-                                child: Container(
-                                  height: 135,
-                                  width: 135,
-                                  color: Colors.grey[300],
-                                ),
-                              );
-                            },
-                          ),
-                        ), //image
-                        Align(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 150,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  recommendations[index].name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                width: 150,
-                                padding:
-                                    const EdgeInsets.only(left: 10, top: 5),
-                                child: const Stars(
-                                  rating: 2.0,
-                                ),
-                              ),
-                              Container(
-                                width: 150,
-                                padding:
-                                    const EdgeInsets.only(left: 10, top: 5),
-                                child: Text(
-                                  '\$${recommendations[index].price}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                              ),
-                              Container(
-                                width: 150,
-                                padding: const EdgeInsets.only(left: 10),
-                                child: const Text('Eligible for FREE Shipping'),
-                              ),
-                              Container(
-                                width: 150,
-                                padding:
-                                    const EdgeInsets.only(left: 10, top: 5),
-                                child: const Text(
-                                  'In Stock',
-                                  style: TextStyle(
-                                    color: Colors.teal,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        ProductDetailsScreen.routeName,
+                        arguments: recommendations[index],
+                      );
+                    },
+                    child: RecommendationBox(
+                      recommendation: recommendations[index],
                     ),
                   );
                 },
