@@ -41,12 +41,13 @@ class _PostsScreenState extends State<PostsScreen> {
       },
     );
   }
-  void navigateToAddProduct()async {
-    final value = await Navigator.pushNamed(context, AddProductScreen.routeName);
-    if(value is Product){
 
+  void navigateToAddProduct() async {
+    final value =
+        await Navigator.pushNamed(context, AddProductScreen.routeName);
+    if (value is Product) {
       setState(() {
-        products!.add(value);  // Append the new product to the list
+        products!.add(value); // Append the new product to the list
       });
     }
   }
@@ -83,7 +84,8 @@ class _PostsScreenState extends State<PostsScreen> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () => deleteProduct(productData, index),
+                              onPressed: () =>
+                                  deleteProduct(productData, index),
                               icon: const Icon(Icons.delete),
                             ),
                           ],

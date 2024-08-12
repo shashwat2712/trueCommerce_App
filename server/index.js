@@ -5,16 +5,22 @@ const mongoose = require('mongoose')
 
 //Imports from other files
 const authRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
+const productRouter = require('./routes/product');
+const userRouter = require('./routes/user');
 
 //INIT
-const PORT = 5010;
+const PORT = process.env.Port || 8000;
 const app = express();
-const DB = "mongodb+srv://shashwatsaivyas:9827591825a@cluster0.ecndkbx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const DB = process.env.DB;
 
 
 //middleware
 app.use(express.json());
 app.use(authRouter);
+app.use(adminRouter);
+app.use(productRouter);
+app.use(userRouter);
 
 
 
@@ -29,6 +35,7 @@ mongoose.connect(DB).then(() => {
 app.listen(PORT, "0.0.0.0",() =>{
     console.log(`connected at port ${PORT} hello`);
 });
+
 
 
 

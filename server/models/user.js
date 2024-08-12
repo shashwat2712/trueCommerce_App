@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { productSchema } = require('./product');
 const userSchema = mongoose.Schema({
      name : {
         required : true,
@@ -29,8 +30,16 @@ const userSchema = mongoose.Schema({
      type : {
         type : String,
         default : 'user',
-     }
-     //cart
+     },
+     cart : [
+      {
+         product : productSchema,
+         quantity : {
+            type : Number,
+            required : true,
+         }
+      },
+     ]
 
 })
 //making a model as above is not a model but just a schema
